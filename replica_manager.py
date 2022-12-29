@@ -1,20 +1,35 @@
 # [x] write a program that copies an existing folder into a new folder
 # [] apply command line arguments for paths source and replica
+# [] build a main function
 # [] build logging functionality
 # [] apply copy at interval
+# [] write a readme
 # [] apply a hashing algorithm
 
 import shutil
+import sys
 
 
-def create_replica(path: str) -> None:
-    """A function creating a copy of an existing folder"""
+class Replica:
+    def __init__(self, src):
+        self.src = src
+        self.create_replica()
 
-    # define path to the default destination
-    last_dst_index = path[:-1].rfind('/')
-    default_dst = f'{path[:last_dst_index]}/replica_{path[last_dst_index+1:]}'
+    def create_replica(self) -> None:
+        """A function creating a copy of an existing folder."""
 
-    # create a copy of the directory
-    shutil.copytree(path, default_dst)
+        # define path to the default destination
+        last_dst_index = self.src[:-1].rfind('/')
+        default_dst = f'{self.src[:last_dst_index]}/replica_{self.src[last_dst_index+1:]}'
 
-    return
+        # create a copy of the directory
+        shutil.copytree(self.src, default_dst)
+
+        return
+
+
+if __name__ == "__main__":
+    try:
+        replica = Replica(sys.argv[1])
+    except IndexError:
+        print('No source folder given. Use following CLI arguments:\nreplica_manager.py <source_folder_path> <destination_folder_path> <synchronization_interval> <log_file_path>')

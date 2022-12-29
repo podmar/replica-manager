@@ -11,25 +11,18 @@ import sys
 
 
 class Replica:
-    def __init__(self, src):
+    def __init__(self, src, dst):
         self.src = src
+        self.dst = dst
         self.create_replica()
 
     def create_replica(self) -> None:
-        """A function creating a copy of an existing folder."""
-
-        # define path to the default destination
-        last_dst_index = self.src[:-1].rfind('/')
-        default_dst = f'{self.src[:last_dst_index]}/replica_{self.src[last_dst_index+1:]}'
-
-        # create a copy of the directory
-        shutil.copytree(self.src, default_dst)
-
-        return
+        """A function creating a copy of an existing folder to the destination directory."""
+        shutil.copytree(self.src, self.dst)
 
 
 if __name__ == "__main__":
     try:
-        replica = Replica(sys.argv[1])
+        replica = Replica(sys.argv[1], sys.argv[2])
     except IndexError:
-        print('No source folder given. Use following CLI arguments:\nreplica_manager.py <source_folder_path> <destination_folder_path> <synchronization_interval> <log_file_path>')
+        print('Required arguments not specified. Use following CLI arguments:\nreplica_manager.py <source_folder_path> <destination_folder_path> <synchronization_interval> <log_file_path>')

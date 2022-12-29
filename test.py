@@ -24,16 +24,17 @@ class TestReplicaCreated(TestCase):
     def tearDown(self):
         shutil.rmtree(self.tmp_test_container)
 
-    def test_replica_created_default_dst_success(self):
-        """Tests that a copy of a folder is created in the same directory if no destination path is given."""
-        test_replica = Replica(self.tmp_test_src)
-        self.assertEqual(len(os.listdir(self.tmp_test_container)), 2)
+    def test_replica_folder_created_success(self):
+        """Tests that a copy of the source folder is created in the destination directory"""
+        replica_dir_path = f'{self.tmp_test_dst}/test_replica_folder'
+        test_replica = Replica(self.tmp_test_src, replica_dir_path)
+        self.assertEqual(len(os.listdir(self.tmp_test_dst)), 1)
 
-    def test_replica_created_success(self):
-        """Tests that a copy of a folder is created at the given destination path."""
-        test_replica = Replica(self.tmp_test_src, self.tmp_test_dst)
-        self.assertEqual(len(os.listdir(self.tmp_test_dst)),
-                         len(os.listdir(self.tmp_test_src)))
+    def test_replica_folder_contains_files(self):
+        """Tests that replica folder contains original files from the source folder"""
+        replica_dir_path = f'{self.tmp_test_dst}/test_replica_folder'
+        test_replica = Replica(self.tmp_test_src, replica_dir_path)
+        self.assertEqual(len(os.listdir(replica_dir_path)), 1)
 
 
 class TestCliArguments(TestCase):
@@ -48,14 +49,16 @@ class TestCliArguments(TestCase):
         shutil.rmtree(self.tmp_test_container)
 
     def test_source_argument_correct(self):
-        with patch.object(sys, 'argv', ['replica_manager.py', self.tmp_test_src]):
-            test_replica = Replica(sys.argv[1])
+        replica_dir_path = f'{self.tmp_test_dst}/test_replica_folder'
+        with patch.object(sys, 'argv', ['replica_manager.py', self.tmp_test_src, replica_dir_path]):
+            test_replica = Replica(sys.argv[1], sys.argv[2])
             self.assertEqual(test_replica.src, self.tmp_test_src)
 
     def test_destination_argument_correct(self):
-        with patch.object(sys, 'argv', ['replica_manager.py', self.tmp_test_src, self.tmp_test_dst]):
-            test_replica = Replica(sys.argv[1], )
-            self.assertEqual(test_replica.dst, self.tmp_test_dst)
+        replica_dir_path = f'{self.tmp_test_dst}/test_replica_folder'
+        with patch.object(sys, 'argv', ['replica_manager.py', self.tmp_test_src, replica_dir_path]):
+            test_replica = Replica(sys.argv[1], sys.argv[2])
+            self.assertEqual(test_replica.dst, replica_dir_path)
 
 
 if __name__ == '__main__':

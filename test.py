@@ -63,5 +63,26 @@ class TestCliArguments(TestCase):
             self.assertEqual(test_replica.dst, self.tmp_test_dst)
 
 
+class TestUpdateReplicaMethod(TestCase):
+    """Test that the replica folder is updated after calling update replica function."""
+
+    def setUp(self):
+        self.tmp_test_container = tempfile.mkdtemp()
+        self.tmp_test_src = tempfile.mkdtemp(dir=self.tmp_test_container)
+        self.tmp_test_file = tempfile.mkstemp(dir=self.tmp_test_src)
+        self.tmp_test_dst = f'{self.tmp_test_container}/test_replica_folder'
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp_test_container)
+
+    def test_replica_contains_new_files(self):
+        """Tests that update replica method copies files added to the souce directory."""
+        test_replica = Replica(self.tmp_test_src, self.tmp_test_dst)
+        self.assertEqual(len(os.listdir(self.tmp_test_dst)), 1)
+        tmp_added_test_file = tempfile.mkstemp(dir=self.tmp_test_src)
+        test_replica.update_replica()
+        self.assertEqual(len(os.listdir(self.tmp_test_dst)), 2)
+
+
 if __name__ == '__main__':
     unittest.main()

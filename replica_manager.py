@@ -1,17 +1,3 @@
-# [x] write a program that copies an existing folder into a new folder
-# [x] apply command line arguments for paths source and replica
-# [x] build a main function
-# [x] build logging functionality (creation/copying/removal operations)
-# [x] compare and update replica
-#   [x] - copy new files that are not in the replica
-#   [x] - check for changes and add them to the replica
-#   [] - remove deleted files
-# [] apply interval
-# [] write a readme
-# [] apply a hashing algorithm ?
-# [] apply threading ?
-# [] refactor CLI arg tests
-
 import shutil
 import sys
 import logging

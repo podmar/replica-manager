@@ -66,6 +66,7 @@ class Replica:
                     f'{file}: new file copied to replica destination directory.')
 
 # TODO: move the logging messages into lower level functions once a proper proper function for adding changes is written.
+# TODO: currently the programm does not remove files from replica folder if they have been removed from the source directory. This functionality could be implemented by looping through destination and checking for files that are not in source. There is definitely a better way to achieve this and I chose not to implement it because it does not scale.
 
     def file_changed(self, file_name: str) -> bool:
         src_file_path = f'{self.src}/{file_name}'

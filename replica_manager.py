@@ -11,8 +11,6 @@
 # [] apply a hashing algorithm ?
 # [] apply threading ?
 # [] refactor CLI arg tests
-# touch test2.txt
-# python replica_manager.py /Users/martapodziewska/Documents/test_folder /Users/martapodziewska/Documents/replica_1818_test_folder /Users/martapodziewska/Documents/log1852.log
 
 import shutil
 import sys
@@ -58,16 +56,21 @@ class Replica:
                 if self.file_changed(file):
                     self.delete_file(file)
                     self.copy_file(file)
-
+                    logging.info(
+                        f'{file}: changes saved in replica destination directory.')
                 else:
                     continue
             else:
                 self.copy_file(file)
+                logging.info(
+                    f'{file}: new file copied to replica destination directory.')
+
+# TODO: move the logging messages into lower level functions once a proper proper function for adding changes is written.
 
     def file_changed(self, file_name: str) -> bool:
         src_file_path = f'{self.src}/{file_name}'
         dst_file_path = f'{self.dst}/{file_name}'
-        return filecmp.cmp(src_file_path, dst_file_path)
+        return not filecmp.cmp(src_file_path, dst_file_path)
 
     def copy_file(self, file_name: str) -> None:
         """Given the file name, the method copies it to destination folder"""

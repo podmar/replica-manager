@@ -27,15 +27,13 @@ class TestReplicaCreated(TestCase):
 
     def test_replica_folder_created_success(self):
         """Tests that a copy of the source folder is created in the destination directory"""
-        test_replica = Replica(self.tmp_test_src, self.tmp_test_dst)
-
+        test_replica = Replica(self.tmp_test_src, self.tmp_test_dst, 1)
         self.assertEqual(len(os.listdir(self.tmp_test_dst)), 1)
 
     def test_replica_folder_contains_files(self):
         """Tests that replica folder contains original files from the source folder"""
-        replica_dir_path = f'{self.tmp_test_dst}/test_replica_folder'
-        test_replica = Replica(self.tmp_test_src, replica_dir_path)
-        self.assertEqual(len(os.listdir(replica_dir_path)), 1)
+        test_replica = Replica(self.tmp_test_src, self.tmp_test_dst, 1)
+        self.assertEqual(len(os.listdir(self.tmp_test_dst)), 1)
 
 # TODO: test that if a replica not created an exception is raised
 
@@ -53,18 +51,18 @@ class TestCliArguments(TestCase):
 
     def test_source_argument_correct(self):
         with patch.object(sys, 'argv', ['replica_manager.py', self.tmp_test_src, self.tmp_test_dst]):
-            test_replica = Replica(sys.argv[1], sys.argv[2])
+            test_replica = Replica(sys.argv[1], sys.argv[2], 1)
             self.assertEqual(test_replica.src, self.tmp_test_src)
 
     def test_destination_argument_correct(self):
         replica_dir_path = f'{self.tmp_test_dst}/test_replica_folder'
         with patch.object(sys, 'argv', ['replica_manager.py', self.tmp_test_src, self.tmp_test_dst]):
-            test_replica = Replica(sys.argv[1], sys.argv[2])
+            test_replica = Replica(sys.argv[1], sys.argv[2], 1)
             self.assertEqual(test_replica.dst, self.tmp_test_dst)
 
 
-class TestUpdateReplicaMethod(TestCase):
-    """Test that the replica folder is updated after calling update replica function."""
+class TestFileOperationMethods(TestCase):
+    """Test that the replica folder is updated after changes in source are made"""
 
     def setUp(self):
         self.tmp_test_container = tempfile.mkdtemp()
@@ -77,11 +75,14 @@ class TestUpdateReplicaMethod(TestCase):
 
     def test_replica_contains_new_files(self):
         """Tests that update replica method copies files added to the souce directory."""
-        test_replica = Replica(self.tmp_test_src, self.tmp_test_dst)
+        test_replica = Replica(self.tmp_test_src, self.tmp_test_dst, 1)
         self.assertEqual(len(os.listdir(self.tmp_test_dst)), 1)
         tmp_added_test_file = tempfile.mkstemp(dir=self.tmp_test_src)
         test_replica.update_replica()
         self.assertEqual(len(os.listdir(self.tmp_test_dst)), 2)
+
+# TODO: add tests on copy, delete and file changed method
+# TODO: test if logs are created and have relevant content
 
 
 if __name__ == '__main__':

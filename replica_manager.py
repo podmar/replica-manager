@@ -24,22 +24,21 @@ import logger_settings
 
 def main() -> None:
     try:
-        logger_settings.set_logger(sys.argv[3])
-        replica = Replica(sys.argv[1], sys.argv[2])
+        logger_settings.set_logger(sys.argv[4])
+        replica = Replica(sys.argv[1], sys.argv[2], int(sys.argv[3]))
     except IndexError:
-        print('Required arguments not specified. Use following CLI arguments:\nreplica_manager.py <source_folder_path> <destination_folder_path> <synchronization_interval> <log_file_path>')
+        replica = None
+        print('Required arguments not specified. Use following arguments:\nreplica_manager.py <source_folder_path> <destination_folder_path> <synchronization_interval_in_seconds> <log_file_path>')
 
-    if replica:
-        time.sleep(5)
-        # for iteration in range(5):
+    while replica:
         replica.update_replica()
-        #     time.sleep(3)
 
 
 class Replica:
-    def __init__(self, src: str, dst: str):
+    def __init__(self, src: str, dst: str, interval: int):
         self.src = src
         self.dst = dst
+        self.interval = interval
         self.create_replica()
 
     def create_replica(self) -> None:
@@ -48,6 +47,7 @@ class Replica:
         logging.info("A replica folder has been created.")
 
     def update_replica(self) -> None:
+        time.sleep(self.interval)
         src_filelist = os.listdir(self.src)
         dst_filelist = os.listdir(self.dst)
 

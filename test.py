@@ -50,11 +50,13 @@ class TestCliArguments(TestCase):
         shutil.rmtree(self.tmp_test_container)
 
     def test_source_argument_correct(self):
+        """Tests that the source argument is passed successfully."""
         with patch.object(sys, 'argv', ['replica_manager.py', self.tmp_test_src, self.tmp_test_dst]):
             test_replica = Replica(sys.argv[1], sys.argv[2], 1)
             self.assertEqual(test_replica.src, self.tmp_test_src)
 
     def test_destination_argument_correct(self):
+        """Tests that the destination argument is passed successfully."""
         replica_dir_path = f'{self.tmp_test_dst}/test_replica_folder'
         with patch.object(sys, 'argv', ['replica_manager.py', self.tmp_test_src, self.tmp_test_dst]):
             test_replica = Replica(sys.argv[1], sys.argv[2], 1)
